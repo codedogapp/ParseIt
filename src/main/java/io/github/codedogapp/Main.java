@@ -1,19 +1,38 @@
 package io.github.codedogapp;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import io.github.codedogapp.parser.antlr.c.CVisitor;
+
+
 public class Main {
 
-    static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+    static void main(final String[] args) {
+        final var code = """
+                         #include <stdio.h>
+                         
+                         typedef struct {
+                             int id;
+                             char name[50];
+                             double score;
+                         } Student;
+                         
+                         void printStudent(Student s) {
+                             printf("ID: %d\\n", s.id);
+                             printf("Name: %s\\n", s.name);
+                             printf("Score: %.2f\\n", s.score);
+                         }
+                         
+                         int main() {
+                             Student st = {1, "Alice", 92.5};
+                             printStudent(st);
+                             return 0;
+                         }
+                         """;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+        final var result = CVisitor.FUNCTION.visit(code);
+        IO.println("Functions: " + result);
+
+        final var structResult = CVisitor.STRUCT.visit(code);
+        IO.println("Structs: " + structResult);
     }
 
 }
